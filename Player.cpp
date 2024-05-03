@@ -8,10 +8,10 @@
 #include "iostream"
 
 void Player::update(){
-    shape.setPosition(position);
+    shape.setPosition(1920/2-radius, 1080/2-radius);
 }
 bool Player::isIn(sf::Vector2f point){
-    if(collMap.getPixel(point.x, point.y) == sf::Color::Black) {
+    if((int)(collMap.getPixel(point.x, point.y).r) < 50) {
         return false;
     }
     else{
@@ -21,18 +21,19 @@ bool Player::isIn(sf::Vector2f point){
 
 
 void Player::shunt(int rayNum, float shuntDist){
-    sf::Vector2f newPlayerCenter = sf::Vector2f(radius, radius)+position;
+    sf::Vector2f newPlayerCenter = sf::Vector2f(1920/2-radius, 1080/2-radius)-position;
 
     sf::Vector2f clock = sf::Vector2f(1,0);
+    std::cout<<isIn(newPlayerCenter)<<"\n";
     for(int i = 0;i<rayNum;i++){
         if(isIn(newPlayerCenter + vmath::rotateVector(clock, 2 * M_PI / rayNum * i) * radius)){
-            position-=vmath::rotateVector(clock,2*M_PI/rayNum*i)*radius*shuntDist;
+            position+=vmath::rotateVector(clock,2*M_PI/rayNum*i)*radius*shuntDist;
         }
     }
 }
 
 void Player::moveDir(sf::Vector2f dir){
-    position+=dir;
+    position-=dir;
 }
 sf::CircleShape Player::getShape(){return shape;}
 sf::Vector2f Player::getPosition(){return position+sf::Vector2f(radius, radius);}

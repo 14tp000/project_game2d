@@ -44,11 +44,18 @@ auto main() -> int {
 
     Map map = Map("D:\\Users\\Jeremi\\CLionProjects\\project_game2d\\maps\\mapImages\\map1.png");
     sf::Texture mTexture;
-    Player player = Player(100, 100,map.img);
-    mTexture.loadFromImage(player.collMap);
+    mTexture.loadFromImage(map.img);
 
+    Map mapColls = Map("D:\\Users\\Jeremi\\CLionProjects\\project_game2d\\maps\\mapImages\\map1_collisions.png");
+    sf::Texture cTexture;
+    Player player = Player(0, 0,mapColls.img);
+    cTexture.loadFromImage(mapColls.img);
+    player.update();
 
     sf::Shader shader;
+    sf::Sprite canvas;
+    canvas.setTexture(mTexture);
+    canvas.setScale(1,1);
     if (!shader.loadFromFile("./collShader.frag", sf::Shader::Fragment)) {
         std::cout<<"AMOGUUUUUUUUUUUUUUUS";
     }
@@ -67,12 +74,12 @@ auto main() -> int {
                 window.close();
             }
 
-            window.clear(sf::Color::White);
-            sf::Sprite canvas;
-            canvas.setTexture(mTexture);
-            canvas.setScale(1,1);
-            canvas.setPosition(0,0);
-            //window.draw(canvas);
+            window.clear(sf::Color::Black);
+
+
+            //canvas.setPosition(sf::Vector2f(borderX-player.getPosition().x,borderY-player.getPosition().y));
+            canvas.setPosition(player.getPosition());
+            window.draw(canvas);
 
 
 
@@ -80,10 +87,9 @@ auto main() -> int {
 
             player.moveDir(getMoveDir(dt.asSeconds()));
             player.shunt(80, dt.asSeconds());
-            player.update();
-            shader.setParameter("collMap",mTexture);
-            shader.setParameter("resolution",sf::Vector2f(borderX,borderY));
-            shader.setParameter("u_position",player.getPosition());
+            shader.setParameter("collMap",cTexture);
+            shader.setParameter("resolution",sf::Vector2f(5846,4134)); // texture size is 5846x4134, TODO: softcode this
+            shader.setParameter("u_position",sf::Vector2f(1920/2, 1080/2)-player.getPosition());
             window.draw(sf::RectangleShape(sf::Vector2f(borderX,borderY)), &shader);
 
             window.draw(player.getShape());
