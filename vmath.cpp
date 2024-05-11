@@ -24,3 +24,9 @@ sf::Vector2f vmath::normaliseVector(sf::Vector2f v){
         return  sf::Vector2f(0,0);
     }
 }
+
+auto vmath::distV(sf::Vector2f v1, sf::Vector2f v2) -> float{
+    float dx = v1.x-v2.x;
+    float dy = v1.y-v2.y;
+    return sqrt(dx*dx+dy*dy);
+}

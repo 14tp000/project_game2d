@@ -4,10 +4,12 @@
 #include <SFML/Window/Keyboard.hpp>
 #include <cmath>
 #include "Player.h"
+#include "Enemy.h"
 #include "vmath.h"
 #include "./maps/Map.h"
 
 //https://www.sfml-dev.org/tutorials/2.0/graphics-shader.php, and https://thebookofshaders.com/edit.php used for help with adding shaders
+
 
 sf::Vector2f getMoveDir(float dt){
     sf::Vector2f dir = sf::Vector2f(0, 0);
@@ -52,6 +54,8 @@ auto main() -> int {
     cTexture.loadFromImage(mapColls.img);
     player.update();
 
+    Enemy enemy = Enemy(sf::Vector2f(500,500),50);
+
     sf::Shader shader;
     sf::Sprite canvas;
     canvas.setTexture(mTexture);
@@ -87,12 +91,18 @@ auto main() -> int {
 
             player.moveDir(getMoveDir(dt.asSeconds()));
             player.shunt(80, dt.asSeconds());
+
+            enemy.Update(player.getPosition());
+            enemy.MoveToPlayer();
+
+
             shader.setParameter("collMap",cTexture);
             shader.setParameter("resolution",sf::Vector2f(5846,4134)); // texture size is 5846x4134, TODO: softcode this
             shader.setParameter("u_position",sf::Vector2f(1920/2, 1080/2)-player.getPosition());
             window.draw(sf::RectangleShape(sf::Vector2f(borderX,borderY)), &shader);
 
             window.draw(player.getShape());
+            window.draw(enemy.gfx);
 
 
             window.display();

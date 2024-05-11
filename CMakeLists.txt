@@ -21,5 +21,7 @@ add_executable(project_game2d main.cpp
         vmath.cpp
         vmath.h
         maps/Map.cpp
-        maps/Map.h)
+        maps/Map.h
+        Enemy.cpp
+        Enemy.h)
 target_link_libraries(project_game2d sfml-graphics)
