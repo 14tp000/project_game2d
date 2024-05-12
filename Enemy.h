@@ -11,19 +11,20 @@ class Enemy {
         sf::CircleShape gfx;
         sf::Vector2f position;
         sf::Vector2f playerPos;
-        float speed = 1.f;
+        float speed = 2.f;
         float radius;
-        float aggroRadius = 700.f;
+        float aggroRadius = 500.f;
         sf::Image collMap; //TODO: zrobić lepiej
 
         void Update(sf::Vector2f playerP);
         bool inLOS();
         void MoveToPlayer();
         bool isIn(sf::Vector2f point);
-        Enemy(sf::Vector2f startPos, float rad){
+        Enemy(sf::Vector2f startPos, float rad, sf::Image collMap){
             radius = rad;
             position = startPos;
             gfx = sf::CircleShape(rad, 32);
+            this->collMap = collMap;
         }
 };
 

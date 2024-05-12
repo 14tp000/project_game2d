@@ -24,7 +24,6 @@ void Player::shunt(int rayNum, float shuntDist){
     sf::Vector2f newPlayerCenter = sf::Vector2f(1920/2-radius, 1080/2-radius)-position;
 
     sf::Vector2f clock = sf::Vector2f(1,0);
-    std::cout<<isIn(newPlayerCenter)<<"\n";
     for(int i = 0;i<rayNum;i++){
         if(isIn(newPlayerCenter + vmath::rotateVector(clock, 2 * M_PI / rayNum * i) * radius)){
             position+=vmath::rotateVector(clock,2*M_PI/rayNum*i)*radius*shuntDist;

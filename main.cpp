@@ -54,7 +54,7 @@ auto main() -> int {
     cTexture.loadFromImage(mapColls.img);
     player.update();
 
-    Enemy enemy = Enemy(sf::Vector2f(500,500),50);
+    Enemy enemy = Enemy(sf::Vector2f(500,500),50, mapColls.img);
 
     sf::Shader shader;
     sf::Sprite canvas;
