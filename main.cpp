@@ -91,6 +91,7 @@ auto main() -> int {
 
             player.moveDir(getMoveDir(dt.asSeconds()));
             player.shunt(80, dt.asSeconds());
+            enemy.shunt(80, dt.asSeconds());
 
             enemy.Update(player.getPosition());
             enemy.MoveToPlayer();
@@ -103,6 +104,8 @@ auto main() -> int {
 
             window.draw(player.getShape());
             window.draw(enemy.gfx);
+            window.draw(enemy.debugGfx);
+            window.draw(enemy.debugGfx2);
 
 
             window.display();
