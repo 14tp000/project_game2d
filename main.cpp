@@ -91,6 +91,7 @@ auto main() -> int {
 
             player.moveDir(getMoveDir(dt.asSeconds()));
             player.shunt(80, dt.asSeconds());
+            enemy.dt = dt.asSeconds();
             enemy.shunt(80, dt.asSeconds());
 
             enemy.Update(player.getPosition());

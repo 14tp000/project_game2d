@@ -13,13 +13,14 @@ class Enemy {
         sf::CircleShape debugGfx2;
         sf::Vector2f position;
         sf::Vector2f playerPos;
-        float speed = 2.f;
+        float speed = 550.f;
         float radius;
         float aggroRadius = 700.f;
+        float dt = 1;
         sf::Image collMap; //TODO: zrobić lepiej
 
         void Update(sf::Vector2f playerP);
-        bool inLOS(sf::Vector2f point);
+        bool inLOS(sf::Vector2f from, sf::Vector2f to);
         void MovePosition(sf::Vector2f pos,float spd);
         bool moveToNearLOSPoint(sf::Vector2f pos);
         void MoveToPlayer();
