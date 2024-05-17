@@ -23,5 +23,14 @@ add_executable(project_game2d main.cpp
         maps/Map.cpp
         maps/Map.h
         Enemy.cpp
-        Enemy.h)
+        Enemy.h
+        Weapon.cpp
+        Weapon.h
+        Staff.cpp
+        Staff.h
+        Projectile.cpp
+        Projectile.h
+        RangedWpn.cpp
+        RangedWpn.h
+)
 target_link_libraries(project_game2d sfml-graphics)

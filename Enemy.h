@@ -5,15 +5,14 @@
 #ifndef PROJECT_GAME2D_ENEMY_H
 #define PROJECT_GAME2D_ENEMY_H
 
+#include <SFML/Graphics.hpp>
 
 class Enemy {
     public:
         sf::CircleShape gfx;
-        sf::CircleShape debugGfx;
-        sf::CircleShape debugGfx2;
         sf::Vector2f position;
         sf::Vector2f playerPos;
-        float speed = 550.f;
+        float speed = 450.f;
         float radius;
         float aggroRadius = 700.f;
         float dt = 1;
@@ -26,12 +25,14 @@ class Enemy {
         void MoveToPlayer();
         bool isIn(sf::Vector2f point);
         void shunt(int rayNum, float shuntDist);
+        bool collides(sf::Vector2f pt);
+        void knockBack(sf::Vector2f dir, float force);
+        sf::Vector2f getScreenPos();
+        sf::Vector2f getGlobalPos();
         Enemy(sf::Vector2f startPos, float rad, sf::Image collMap){
             radius = rad;
             position = startPos;
             gfx = sf::CircleShape(rad, 32);
-            debugGfx = sf::CircleShape(30, 32);
-            debugGfx2 = sf::CircleShape(30, 32);
             this->collMap = collMap;
         }
 };

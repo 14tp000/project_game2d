@@ -23,6 +23,14 @@ bool Enemy::isIn(sf::Vector2f point){
     }
 }
 
+bool Enemy::collides(sf::Vector2f pt) {
+    return vmath::distV(pt, position+playerPos) <=radius;
+}
+
+void Enemy::knockBack(sf::Vector2f dir, float force) {
+    position-=dir*force;
+}
+
 bool Enemy::inLOS(sf::Vector2f from, sf::Vector2f to){
     sf::Vector2f clock = sf::Vector2f(1,0);
     int successPts = 0;
@@ -49,6 +57,13 @@ void Enemy::MovePosition(sf::Vector2f pos, float spd) {
     position-=dir*spd*dt;
 }
 
+sf::Vector2f Enemy::getScreenPos() {
+    return position+playerPos+sf::Vector2f(radius, radius);
+}
+
+sf::Vector2f Enemy::getGlobalPos() {
+    return position+sf::Vector2f(radius,radius);
+}
 
 bool Enemy::moveToNearLOSPoint(sf::Vector2f pos) {
     float minDist = 150;
@@ -66,7 +81,6 @@ bool Enemy::moveToNearLOSPoint(sf::Vector2f pos) {
             newClock = newClock*(minDist+distanceStep*i);
             //sf::Vector2f(1920/2,1080/2)
             if(inLOS(position+playerPos+sf::Vector2f(radius,radius),pos+newClock)&&inLOS(sf::Vector2f(1920/2,1080/2),pos+newClock)){
-                //debugGfx.setPosition(newClock+pos+sf::Vector2f(-30,-30));
                 morbius = true;
                 float d = vmath::distV(position+playerPos+sf::Vector2f(radius,radius),newClock+pos);
                 out = newClock+pos;
