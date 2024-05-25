@@ -32,5 +32,13 @@ add_executable(project_game2d main.cpp
         Projectile.h
         RangedWpn.cpp
         RangedWpn.h
+        Destructible.cpp
+        Destructible.h
+        meleeEnemy.cpp
+        meleeEnemy.h
+        rangedEnemy.cpp
+        rangedEnemy.h
+        renderManager.cpp
+        renderManager.h
 )
 target_link_libraries(project_game2d sfml-graphics)

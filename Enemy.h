@@ -6,34 +6,46 @@
 #define PROJECT_GAME2D_ENEMY_H
 
 #include <SFML/Graphics.hpp>
+#include "Player.h"
+#include "Destructible.h"
+#include "iostream"
+#include "renderManager.h"
 
-class Enemy {
+class Enemy: public Destructible{
     public:
         sf::CircleShape gfx;
         sf::Vector2f position;
-        sf::Vector2f playerPos;
-        float speed = 450.f;
+        float speed;
         float radius;
         float aggroRadius = 700.f;
         float dt = 1;
-        sf::Image collMap; //TODO: zrobić lepiej
+        sf::Image* collMap; //TODO: zrobić lepiej
+        Player* player;
+        bool inPlayerLOS = false;
+        renderManager* renderM;
 
-        void Update(sf::Vector2f playerP);
+        virtual void Update();
         bool inLOS(sf::Vector2f from, sf::Vector2f to);
         void MovePosition(sf::Vector2f pos,float spd);
         bool moveToNearLOSPoint(sf::Vector2f pos);
-        void MoveToPlayer();
+        virtual void MoveToPlayer();
         bool isIn(sf::Vector2f point);
         void shunt(int rayNum, float shuntDist);
         bool collides(sf::Vector2f pt);
         void knockBack(sf::Vector2f dir, float force);
+        virtual void damagePlayer(float ammount){std::cout<<"to nie powinno byc wywolywane";};
         sf::Vector2f getScreenPos();
         sf::Vector2f getGlobalPos();
-        Enemy(sf::Vector2f startPos, float rad, sf::Image collMap){
+        Enemy(sf::Vector2f startPos, float rad, sf::Image* collMap, Player* pl, float hp, renderManager* rM, float spd){
             radius = rad;
             position = startPos;
             gfx = sf::CircleShape(rad, 32);
             this->collMap = collMap;
+            player = pl;
+            maxHP = hp;
+            currentHP = maxHP;
+            renderM = rM;
+            speed = spd;
         }
 };
 

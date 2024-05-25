@@ -11,10 +11,11 @@
 #include "vector"
 #include <SFML/Graphics.hpp>
 #include "Player.h"
+#include "renderManager.h"
 
 class Weapon {
 public:
-    std::vector<Enemy*> enemies;
+    std::vector<Enemy*>* enemies;
     float damage;
     float attackCd;
     float range;
@@ -23,19 +24,23 @@ public:
     sf::CircleShape attackGfx;
     Player* player;
     float dt;
+    renderManager* renderM;
+
     void add(Enemy* enm){
-        enemies.push_back(enm);
+        enemies->push_back(enm);
     }
     void remove(){
-        enemies.pop_back();
+        enemies->pop_back();
     }
-    Weapon(float dmg, float rn, sf::Vector2f cnt, float cd, Player& plr){
+    Weapon(float dmg, float rn, sf::Vector2f cnt, float cd, Player& plr, std::vector<Enemy*>& enms, renderManager* rM){
         damage = dmg;
         center = cnt;
         attackCd = cd;
         range = rn;
         attackGfx = sf::CircleShape(range, 32);
         player = &plr;
+        enemies = &enms;
+        renderM = rM;
     }
 };
 

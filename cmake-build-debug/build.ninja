@@ -121,6 +121,38 @@ build CMakeFiles/project_game2d.dir/RangedWpn.cpp.obj: CXX_COMPILER__project_gam
   OBJECT_DIR = CMakeFiles\project_game2d.dir
   OBJECT_FILE_DIR = CMakeFiles\project_game2d.dir
 
+build CMakeFiles/project_game2d.dir/Destructible.cpp.obj: CXX_COMPILER__project_game2d_unscanned_Debug D$:/Users/Jeremi/CLionProjects/project_game2d/Destructible.cpp || cmake_object_order_depends_target_project_game2d
+  DEFINES = -DSFML_STATIC
+  DEP_FILE = CMakeFiles\project_game2d.dir\Destructible.cpp.obj.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  INCLUDES = -ID:/Users/Jeremi/CLionProjects/project_game2d/cmake-build-debug/_deps/sfml-src/include
+  OBJECT_DIR = CMakeFiles\project_game2d.dir
+  OBJECT_FILE_DIR = CMakeFiles\project_game2d.dir
+
+build CMakeFiles/project_game2d.dir/meleeEnemy.cpp.obj: CXX_COMPILER__project_game2d_unscanned_Debug D$:/Users/Jeremi/CLionProjects/project_game2d/meleeEnemy.cpp || cmake_object_order_depends_target_project_game2d
+  DEFINES = -DSFML_STATIC
+  DEP_FILE = CMakeFiles\project_game2d.dir\meleeEnemy.cpp.obj.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  INCLUDES = -ID:/Users/Jeremi/CLionProjects/project_game2d/cmake-build-debug/_deps/sfml-src/include
+  OBJECT_DIR = CMakeFiles\project_game2d.dir
+  OBJECT_FILE_DIR = CMakeFiles\project_game2d.dir
+
+build CMakeFiles/project_game2d.dir/rangedEnemy.cpp.obj: CXX_COMPILER__project_game2d_unscanned_Debug D$:/Users/Jeremi/CLionProjects/project_game2d/rangedEnemy.cpp || cmake_object_order_depends_target_project_game2d
+  DEFINES = -DSFML_STATIC
+  DEP_FILE = CMakeFiles\project_game2d.dir\rangedEnemy.cpp.obj.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  INCLUDES = -ID:/Users/Jeremi/CLionProjects/project_game2d/cmake-build-debug/_deps/sfml-src/include
+  OBJECT_DIR = CMakeFiles\project_game2d.dir
+  OBJECT_FILE_DIR = CMakeFiles\project_game2d.dir
+
+build CMakeFiles/project_game2d.dir/renderManager.cpp.obj: CXX_COMPILER__project_game2d_unscanned_Debug D$:/Users/Jeremi/CLionProjects/project_game2d/renderManager.cpp || cmake_object_order_depends_target_project_game2d
+  DEFINES = -DSFML_STATIC
+  DEP_FILE = CMakeFiles\project_game2d.dir\renderManager.cpp.obj.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
+  INCLUDES = -ID:/Users/Jeremi/CLionProjects/project_game2d/cmake-build-debug/_deps/sfml-src/include
+  OBJECT_DIR = CMakeFiles\project_game2d.dir
+  OBJECT_FILE_DIR = CMakeFiles\project_game2d.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target project_game2d
@@ -129,7 +161,7 @@ build CMakeFiles/project_game2d.dir/RangedWpn.cpp.obj: CXX_COMPILER__project_gam
 #############################################
 # Link the executable project_game2d.exe
 
-build project_game2d.exe: CXX_EXECUTABLE_LINKER__project_game2d_Debug CMakeFiles/project_game2d.dir/main.cpp.obj CMakeFiles/project_game2d.dir/Player.cpp.obj CMakeFiles/project_game2d.dir/vmath.cpp.obj CMakeFiles/project_game2d.dir/maps/Map.cpp.obj CMakeFiles/project_game2d.dir/Enemy.cpp.obj CMakeFiles/project_game2d.dir/Weapon.cpp.obj CMakeFiles/project_game2d.dir/Staff.cpp.obj CMakeFiles/project_game2d.dir/Projectile.cpp.obj CMakeFiles/project_game2d.dir/RangedWpn.cpp.obj | _deps/sfml-build/lib/libsfml-graphics-s-d.a _deps/sfml-build/lib/libsfml-window-s-d.a _deps/sfml-build/lib/libsfml-system-s-d.a _deps/sfml-src/extlibs/libs-mingw/x64/libfreetype.a || _deps/sfml-build/lib/libsfml-graphics-s-d.a _deps/sfml-build/lib/libsfml-system-s-d.a _deps/sfml-build/lib/libsfml-window-s-d.a
+build project_game2d.exe: CXX_EXECUTABLE_LINKER__project_game2d_Debug CMakeFiles/project_game2d.dir/main.cpp.obj CMakeFiles/project_game2d.dir/Player.cpp.obj CMakeFiles/project_game2d.dir/vmath.cpp.obj CMakeFiles/project_game2d.dir/maps/Map.cpp.obj CMakeFiles/project_game2d.dir/Enemy.cpp.obj CMakeFiles/project_game2d.dir/Weapon.cpp.obj CMakeFiles/project_game2d.dir/Staff.cpp.obj CMakeFiles/project_game2d.dir/Projectile.cpp.obj CMakeFiles/project_game2d.dir/RangedWpn.cpp.obj CMakeFiles/project_game2d.dir/Destructible.cpp.obj CMakeFiles/project_game2d.dir/meleeEnemy.cpp.obj CMakeFiles/project_game2d.dir/rangedEnemy.cpp.obj CMakeFiles/project_game2d.dir/renderManager.cpp.obj | _deps/sfml-build/lib/libsfml-graphics-s-d.a _deps/sfml-build/lib/libsfml-window-s-d.a _deps/sfml-build/lib/libsfml-system-s-d.a _deps/sfml-src/extlibs/libs-mingw/x64/libfreetype.a || _deps/sfml-build/lib/libsfml-graphics-s-d.a _deps/sfml-build/lib/libsfml-system-s-d.a _deps/sfml-build/lib/libsfml-window-s-d.a
   FLAGS = -g
   LINK_LIBRARIES = _deps/sfml-build/lib/libsfml-graphics-s-d.a  _deps/sfml-build/lib/libsfml-window-s-d.a  _deps/sfml-build/lib/libsfml-system-s-d.a  -lopengl32  -lwinmm  -lgdi32  _deps/sfml-src/extlibs/libs-mingw/x64/libfreetype.a  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\project_game2d.dir

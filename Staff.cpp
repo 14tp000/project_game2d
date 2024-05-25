@@ -9,13 +9,15 @@
 #include "iostream"
 
 void Staff::hit() {
-    for (int i = 0; i < enemies.size(); ++i) {
-        sf::Vector2f enemyPos = enemies[i]->getScreenPos();
+    for (int i = 0; i < enemies->size(); ++i) {
+        sf::Vector2f enemyPos = (*enemies)[i]->getScreenPos();
         attackGfx.setPosition(center-sf::Vector2f(range, range));
 
-        if(vmath::distV(enemyPos,center)<=range+enemies[i]->radius){
-            enemies[i]->knockBack(center-enemyPos,.5);
+        if(vmath::distV(enemyPos,center)<=range+(*enemies)[i]->radius){
+            (*enemies)[i]->knockBack(center-enemyPos,.5);
+            (*enemies)[i]->damage(20);
             std::cout<<"hit!";
         }
     }
+    renderM->addObj(&attackGfx);
 }

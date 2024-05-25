@@ -9,13 +9,15 @@
 
 
 
-void Enemy::Update(sf::Vector2f playerP){
-    gfx.setPosition(position+playerPos);
-    playerPos = playerP;
+void Enemy::Update(){
+    if(!dead) {
+        gfx.setPosition(position + player->getPosition());
+        renderM->addObj(&gfx);
+    }
 }
 
 bool Enemy::isIn(sf::Vector2f point){
-    if((int)(collMap.getPixel(point.x, point.y).r) < 50) {
+    if((int)(collMap->getPixel(point.x, point.y).r) < 50) {
         return false;
     }
     else{
@@ -24,7 +26,7 @@ bool Enemy::isIn(sf::Vector2f point){
 }
 
 bool Enemy::collides(sf::Vector2f pt) {
-    return vmath::distV(pt, position+playerPos) <=radius;
+    return vmath::distV(pt, position+player->getPosition()) <=radius;
 }
 
 void Enemy::knockBack(sf::Vector2f dir, float force) {
@@ -34,31 +36,31 @@ void Enemy::knockBack(sf::Vector2f dir, float force) {
 bool Enemy::inLOS(sf::Vector2f from, sf::Vector2f to){
     sf::Vector2f clock = sf::Vector2f(1,0);
     int successPts = 0;
-    int numPts = 5;
+    int numPts = 4;
     for(int i = 0;i<numPts;i++) {
         sf::Vector2f newClock = vmath::rotateVector(clock, 2 * M_PI / numPts * i) * radius;
         int ptInLOS = 1;
-        for (int iter = 0; iter < 400; iter++) {
-            sf::Vector2f checkPos = from+newClock - (from+newClock - to) * (iter / 400.f);
+        for (int iter = 0; iter < 100; iter++) {
+            sf::Vector2f checkPos = from+newClock - (from+newClock - to) * (iter / 100.f);
 
-            if (Enemy::isIn(checkPos - playerPos)) {
+            if (Enemy::isIn(checkPos - player->getPosition())) {
                 ptInLOS = 0;
                 break;
             }
         }
         successPts+=ptInLOS;
     }
-    return successPts>=4;
+    return successPts>=3;
 }
 
 
 void Enemy::MovePosition(sf::Vector2f pos, float spd) {
-    sf::Vector2f dir = vmath::normaliseVector(position+playerPos-pos+sf::Vector2f(radius,radius));
+    sf::Vector2f dir = vmath::normaliseVector(position+player->getPosition()-pos+sf::Vector2f(radius,radius));
     position-=dir*spd*dt;
 }
 
 sf::Vector2f Enemy::getScreenPos() {
-    return position+playerPos+sf::Vector2f(radius, radius);
+    return position+player->getPosition()+sf::Vector2f(radius, radius);
 }
 
 sf::Vector2f Enemy::getGlobalPos() {
@@ -67,27 +69,20 @@ sf::Vector2f Enemy::getGlobalPos() {
 
 bool Enemy::moveToNearLOSPoint(sf::Vector2f pos) {
     float minDist = 150;
-    float distanceStep = 10;
+    float distanceStep = 15;
     int angleDiv = 15;
-    int distanceDiv = 10;
+    int distanceDiv = 8;
 
     sf::Vector2f clock = sf::Vector2f(1,0);
-    float minD = 100000000.f;
     sf::Vector2f out;
     bool morbius = false;
     for (int i = 0; i < distanceDiv; ++i) {
         for (int j = 0; j < angleDiv; ++j) {
             sf::Vector2f newClock = vmath::rotateVector(clock, 2*M_PI/angleDiv*j);
             newClock = newClock*(minDist+distanceStep*i);
-            //sf::Vector2f(1920/2,1080/2)
-            if(inLOS(position+playerPos+sf::Vector2f(radius,radius),pos+newClock)&&inLOS(sf::Vector2f(1920/2,1080/2),pos+newClock)){
+            if(inLOS(position+player->getPosition()+sf::Vector2f(radius,radius),pos+newClock)&&inLOS(sf::Vector2f(1920/2,1080/2),pos+newClock)){
                 morbius = true;
-                float d = vmath::distV(position+playerPos+sf::Vector2f(radius,radius),newClock+pos);
                 out = newClock+pos;
-//                if(d<minDist){
-//                    minD = d;
-//                    out = newClock+pos;
-//                }
             }
         }
     }
@@ -98,27 +93,26 @@ bool Enemy::moveToNearLOSPoint(sf::Vector2f pos) {
 }
 
 void Enemy::shunt(int rayNum, float shuntDist){
-    sf::Vector2f newCenter = position+playerPos+sf::Vector2f(radius,radius);
+    sf::Vector2f newCenter = position+player->getPosition()+sf::Vector2f(radius,radius);
 
     sf::Vector2f clock = sf::Vector2f(1,0);
     for(int i = 0;i<rayNum;i++){
-        if(isIn(newCenter + vmath::rotateVector(clock, 2 * M_PI / rayNum * i) * radius- playerPos)){
+        if(isIn(newCenter + vmath::rotateVector(clock, 2 * M_PI / rayNum * i) * radius- player->getPosition())){
             position-=vmath::rotateVector(clock,2*M_PI/rayNum*i)*radius*shuntDist;
         }
     }
 
 }
-
 void Enemy::MoveToPlayer(){
-    sf::Vector2f v = position+playerPos-sf::Vector2f(1920/2,1080/2)+sf::Vector2f(radius,radius);
-    float dist = vmath::vectorMagnitude(v);
-
+    float dist = vmath::distV(player->getScreenPos(),getScreenPos());
+    inPlayerLOS = false;
     if(dist>aggroRadius){
         gfx.setFillColor(sf::Color::Green);
     }
     else if (dist<=aggroRadius)
     {
-        if(inLOS(position+playerPos+sf::Vector2f(radius,radius),sf::Vector2f(1920/2,1080/2))) {
+        if(inLOS(position+player->getPosition()+sf::Vector2f(radius,radius),sf::Vector2f(1920/2,1080/2))) {
+            inPlayerLOS = true;
             gfx.setFillColor(sf::Color::Blue);
             MovePosition(sf::Vector2f(1920/2,1080/2), speed);
         } else{

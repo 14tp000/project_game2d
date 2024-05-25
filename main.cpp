@@ -10,7 +10,10 @@
 #include "Weapon.h"
 #include "Staff.h"
 #include "RangedWpn.h"
-
+#include "vector"
+#include "meleeEnemy.h"
+#include "rangedEnemy.h"
+#include "renderManager.h"
 //https://www.sfml-dev.org/tutorials/2.0/graphics-shader.php, and https://thebookofshaders.com/edit.php used for help with adding shaders
 
 
@@ -39,11 +42,22 @@ sf::Vector2f getMoveDir(float dt){
     return dir;
 }
 
+void updateEnemies(std::vector<Enemy*>& enemies, float dt){
+    for(Enemy* enemy : enemies){
+        enemy->dt = dt;
+        enemy->shunt(80, dt);
+        enemy->Update();
 
-
+        if(!enemy->dead) {
+            enemy->MoveToPlayer();
+            enemy->damagePlayer(10.f);
+        }
+    }
+}
 
 
 auto main() -> int {
+
     unsigned int borderX = 1920;// softcode this
     unsigned int borderY = 1080;
     auto window = sf::RenderWindow(
@@ -58,26 +72,36 @@ auto main() -> int {
     Map mapColls = Map("D:\\Users\\Jeremi\\CLionProjects\\project_game2d\\maps\\mapImages\\map1_collisions.png");
     sf::Texture cTexture;
 
-    Player player = Player(0, 0,mapColls.img);
+    renderManager rM = renderManager(&window);
+
+    Player player = Player(0, 0,mapColls.img,100,&rM);
     cTexture.loadFromImage(mapColls.img);
-    player.update();
 
-    Enemy enemy = Enemy(sf::Vector2f(500,500),50, mapColls.img);
 
-    Staff wpn = Staff(10.f, 100.f, sf::Vector2f(borderX/2, borderY/2), 0.5f, player);
-    wpn.add(&enemy);
+    std::vector<Enemy*> enemies;
 
-    RangedWpn rWpn = RangedWpn(10.f, 0.f, sf::Vector2f(borderX/2, borderY/2),0.2f, player);
-    rWpn.add(&enemy);
+    enemies.push_back(new rangedEnemy(sf::Vector2f(500,500),50, &mapColls.img, &player,100,200,&rM, 350));
+    enemies.push_back(new meleeEnemy(sf::Vector2f(1000,1000),50, &mapColls.img, &player,100, &rM, 420));
+    enemies.push_back(new meleeEnemy(sf::Vector2f(4000,1000),50, &mapColls.img, &player,100, &rM, 420));
+    enemies.push_back(new rangedEnemy(sf::Vector2f(4000,850),50, &mapColls.img, &player,100, 200,&rM, 350));
+    enemies.push_back(new meleeEnemy(sf::Vector2f(4000,650),50, &mapColls.img, &player,100,&rM, 420));
+
+    Staff wpn = Staff(10.f, 100.f, sf::Vector2f(borderX/2, borderY/2), 0.5f, player, enemies,&rM);
+
+    RangedWpn rWpn = RangedWpn(10.f, 0.f, sf::Vector2f(borderX/2, borderY/2),0.2f, player, enemies,&rM);
+
+
+
 
     sf::Shader shader;
+    sf::Shader slider;
     sf::Sprite canvas;
     canvas.setTexture(mTexture);
     canvas.setScale(1,1);
 
     float counter = 0;
     float counter2 = 0;
-    if (!shader.loadFromFile("./collShader.frag", sf::Shader::Fragment)) {
+    if (!shader.loadFromFile("./collShader.frag", sf::Shader::Fragment)||!slider.loadFromFile("./sliderShader.frag", sf::Shader::Fragment)) {
         std::cout<<"AMOGUUUUUUUUUUUUUUUS";
     }
     else {
@@ -104,7 +128,7 @@ auto main() -> int {
 
 
 
-            std::cout<<"fps: "<<1/dt.asSeconds();
+            std::cout<<"fps: "<<1/dt.asSeconds()<<"\n";
 
             player.moveDir(getMoveDir(dt.asSeconds()/1.5));
             player.shunt(80, dt.asSeconds());
@@ -112,11 +136,9 @@ auto main() -> int {
             rWpn.fireDir = vmath::normaliseVector(sf::Vector2f(sf::Mouse::getPosition())-sf::Vector2f(borderX/2, borderY/2));
             rWpn.Update();
 
-            enemy.dt = dt.asSeconds();
-            enemy.shunt(80, dt.asSeconds());
 
-            enemy.Update(player.getPosition());
-            enemy.MoveToPlayer();
+            updateEnemies(enemies, dt.asSeconds());
+
 
             if (sf::Mouse::isButtonPressed(sf::Mouse::Right)&& wpn.attackCd<=counter)
             {
@@ -132,21 +154,21 @@ auto main() -> int {
             shader.setParameter("collMap",cTexture);
             shader.setParameter("resolution",sf::Vector2f(5846,4134)); // texture size is 5846x4134, TODO: softcode this
             shader.setParameter("u_position",sf::Vector2f(1920/2, 1080/2)-player.getPosition());
-            window.draw(sf::RectangleShape(sf::Vector2f(borderX,borderY)), &shader);
+
+            slider.setParameter("start", sf::Vector2f(100,100));
+            slider.setParameter("end", sf::Vector2f(400,150));
+            slider.setParameter("filled", player.getCurrentHp()/player.getMaxHP());
+            slider.setParameter("fillColor",1.,0.,0.,1.);
+            slider.setParameter("bgColor",1.,0.,0.,0.3);
 
             if(counter<0.1){
                 wpn.hit();
-                window.draw(wpn.attackGfx);
             }
-            window.draw(player.getShape());
-            window.draw(enemy.gfx);
+            player.update();
+            rM.DrawAll();
 
-            for( int i = 0;i<rWpn.bullets.size();i++){
-                if(!rWpn.bullets[i]->isKilled) {
-                    window.draw(rWpn.bullets[i]->gfx);
-                }
-            }
-
+            window.draw(sf::RectangleShape(sf::Vector2f(borderX,borderY)), &shader);
+            window.draw(sf::RectangleShape(sf::Vector2f(borderX,borderY)), &slider);
             window.display();
             counter +=dt.asSeconds();
             counter2 +=dt.asSeconds();

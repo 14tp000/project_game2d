@@ -9,6 +9,7 @@
 
 void Player::update(){
     shape.setPosition(1920/2-radius, 1080/2-radius);
+    renderM->addObj(&shape);
 }
 bool Player::isIn(sf::Vector2f point){
     if((int)(collMap.getPixel(point.x, point.y).r) < 50) {
@@ -19,6 +20,17 @@ bool Player::isIn(sf::Vector2f point){
     }
 }
 
+void Player::damage(float ammount) {
+    currentHP-=ammount;
+    if(currentHP<=0){
+        currentHP = 0;
+        die();
+    }
+}
+
+void Player::die() {
+    std::cout<<"Rip\n";
+}
 
 void Player::shunt(int rayNum, float shuntDist){
     sf::Vector2f newPlayerCenter = sf::Vector2f(1920/2-radius, 1080/2-radius)-position;
@@ -35,4 +47,3 @@ void Player::moveDir(sf::Vector2f dir){
     position-=dir;
 }
 sf::CircleShape Player::getShape(){return shape;}
-sf::Vector2f Player::getPosition(){return position+sf::Vector2f(radius, radius);}
