@@ -14,6 +14,7 @@
 #include "meleeEnemy.h"
 #include "rangedEnemy.h"
 #include "renderManager.h"
+#include "Boss.h"
 //https://www.sfml-dev.org/tutorials/2.0/graphics-shader.php, and https://thebookofshaders.com/edit.php used for help with adding shaders
 
 
@@ -58,18 +59,20 @@ void updateEnemies(std::vector<Enemy*>& enemies, float dt){
 
 auto main() -> int {
 
-    unsigned int borderX = 1920;// softcode this
-    unsigned int borderY = 1080;
+    const unsigned int borderX = 1920;
+    const unsigned int borderY = 1080;
+    const unsigned int mapX = 5846;
+    const unsigned int mapY = 4134;
     auto window = sf::RenderWindow(
             sf::VideoMode({borderX, borderY}), "Test",
             sf::Style::Fullscreen, sf::ContextSettings(0, 0, 8)
     );
 
-    Map map = Map("D:\\Users\\Jeremi\\CLionProjects\\project_game2d\\maps\\mapImages\\map1.png");
+    Map map = Map("..\\maps\\mapImages\\map1.png");
     sf::Texture mTexture;
     mTexture.loadFromImage(map.img);
 
-    Map mapColls = Map("D:\\Users\\Jeremi\\CLionProjects\\project_game2d\\maps\\mapImages\\map1_collisions.png");
+    Map mapColls = Map("..\\maps\\mapImages\\map1_collisions.png");
     sf::Texture cTexture;
 
     renderManager rM = renderManager(&window);
@@ -80,11 +83,27 @@ auto main() -> int {
 
     std::vector<Enemy*> enemies;
 
-    enemies.push_back(new rangedEnemy(sf::Vector2f(500,500),50, &mapColls.img, &player,100,200,&rM, 350));
-    enemies.push_back(new meleeEnemy(sf::Vector2f(1000,1000),50, &mapColls.img, &player,100, &rM, 420));
-    enemies.push_back(new meleeEnemy(sf::Vector2f(4000,1000),50, &mapColls.img, &player,100, &rM, 420));
-    enemies.push_back(new rangedEnemy(sf::Vector2f(4000,850),50, &mapColls.img, &player,100, 200,&rM, 350));
-    enemies.push_back(new meleeEnemy(sf::Vector2f(4000,650),50, &mapColls.img, &player,100,&rM, 420));
+//    enemies.push_back(new rangedEnemy(sf::Vector2f(500,500),50, &mapColls.img, &player,100,200,&rM, 350));
+//    enemies.push_back(new meleeEnemy(sf::Vector2f(1000,1000),50, &mapColls.img, &player,100, &rM, 420));
+
+    std::vector<sf::Vector2f> pos;
+    pos.push_back(sf::Vector2f(3000,1500));
+    pos.push_back(sf::Vector2f(2000,2200));
+    pos.push_back(sf::Vector2f(3000,2500));
+
+
+
+    auto atk2 = attack2(nullptr, &rM);
+    auto atk1 = attack1(&atk2, &rM);
+    atk2.setNext(&atk1);
+
+    enemies.push_back(new Boss(sf::Vector2f(3000,2000),80, &mapColls.img, &player,1000, &rM, 150, &pos, 1500, &atk1));
+    atk1.setBoss(enemies[0]);
+    atk2.setBoss(enemies[0]);
+
+//    enemies.push_back(new meleeEnemy(sf::Vector2f(4000,1000),50, &mapColls.img, &player,100, &rM, 420));
+//    enemies.push_back(new rangedEnemy(sf::Vector2f(4000,850),50, &mapColls.img, &player,100, 200,&rM, 350));
+//    enemies.push_back(new meleeEnemy(sf::Vector2f(4000,650),50, &mapColls.img, &player,100,&rM, 420));
 
     Staff wpn = Staff(10.f, 100.f, sf::Vector2f(borderX/2, borderY/2), 0.5f, player, enemies,&rM);
 
@@ -152,8 +171,8 @@ auto main() -> int {
             }
 
             shader.setParameter("collMap",cTexture);
-            shader.setParameter("resolution",sf::Vector2f(5846,4134)); // texture size is 5846x4134, TODO: softcode this
-            shader.setParameter("u_position",sf::Vector2f(1920/2, 1080/2)-player.getPosition());
+            shader.setParameter("resolution",sf::Vector2f(mapX,mapY));
+            shader.setParameter("u_position",sf::Vector2f(borderX/2, borderY/2)-player.getPosition());
 
             slider.setParameter("start", sf::Vector2f(100,100));
             slider.setParameter("end", sf::Vector2f(400,150));
@@ -167,7 +186,7 @@ auto main() -> int {
             player.update();
             rM.DrawAll();
 
-            window.draw(sf::RectangleShape(sf::Vector2f(borderX,borderY)), &shader);
+//            window.draw(sf::RectangleShape(sf::Vector2f(borderX,borderY)), &shader);
             window.draw(sf::RectangleShape(sf::Vector2f(borderX,borderY)), &slider);
             window.display();
             counter +=dt.asSeconds();

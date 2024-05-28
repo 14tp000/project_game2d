@@ -8,5 +8,6 @@ void renderManager::DrawAll() {
     for(sf::Drawable* d : drawableObjs){
         window->draw(*d);
     }
+    drawableObjs.clear(); //https://stackoverflow.com/questions/12795196/clearing-a-vector-of-pointers
     drawableObjs = std::vector<sf::Drawable*>();
 }

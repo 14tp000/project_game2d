@@ -26,7 +26,8 @@ class Enemy: public Destructible{
 
         virtual void Update();
         bool inLOS(sf::Vector2f from, sf::Vector2f to);
-        void MovePosition(sf::Vector2f pos,float spd);
+        void MoveScreenPosition(sf::Vector2f pos,float spd);
+        void MoveGlobalPosition(sf::Vector2f pos, float spd);
         bool moveToNearLOSPoint(sf::Vector2f pos);
         virtual void MoveToPlayer();
         bool isIn(sf::Vector2f point);
@@ -34,8 +35,8 @@ class Enemy: public Destructible{
         bool collides(sf::Vector2f pt);
         void knockBack(sf::Vector2f dir, float force);
         virtual void damagePlayer(float ammount){std::cout<<"to nie powinno byc wywolywane";};
-        sf::Vector2f getScreenPos();
-        sf::Vector2f getGlobalPos();
+        sf::Vector2f getScreenPos() const;
+        sf::Vector2f getGlobalPos() const;
         Enemy(sf::Vector2f startPos, float rad, sf::Image* collMap, Player* pl, float hp, renderManager* rM, float spd){
             radius = rad;
             position = startPos;

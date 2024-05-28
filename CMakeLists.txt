@@ -40,5 +40,7 @@ add_executable(project_game2d main.cpp
         rangedEnemy.h
         renderManager.cpp
         renderManager.h
+        Boss.cpp
+        Boss.h
 )
 target_link_libraries(project_game2d sfml-graphics)

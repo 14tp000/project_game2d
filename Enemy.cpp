@@ -54,16 +54,22 @@ bool Enemy::inLOS(sf::Vector2f from, sf::Vector2f to){
 }
 
 
-void Enemy::MovePosition(sf::Vector2f pos, float spd) {
-    sf::Vector2f dir = vmath::normaliseVector(position+player->getPosition()-pos+sf::Vector2f(radius,radius));
+void Enemy::MoveScreenPosition(sf::Vector2f pos, float spd) {
+//    sf::Vector2f dir = vmath::normaliseVector(position+player->getPosition()-pos+sf::Vector2f(radius,radius));
+    sf::Vector2f dir = vmath::normaliseVector(getScreenPos()-pos);
     position-=dir*spd*dt;
 }
 
-sf::Vector2f Enemy::getScreenPos() {
+void Enemy::MoveGlobalPosition(sf::Vector2f pos, float spd) {
+    sf::Vector2f dir = vmath::normaliseVector(getGlobalPos()-pos);
+    position-=dir*spd*dt;
+}
+
+sf::Vector2f Enemy::getScreenPos() const{
     return position+player->getPosition()+sf::Vector2f(radius, radius);
 }
 
-sf::Vector2f Enemy::getGlobalPos() {
+sf::Vector2f Enemy::getGlobalPos() const{
     return position+sf::Vector2f(radius,radius);
 }
 
@@ -80,14 +86,14 @@ bool Enemy::moveToNearLOSPoint(sf::Vector2f pos) {
         for (int j = 0; j < angleDiv; ++j) {
             sf::Vector2f newClock = vmath::rotateVector(clock, 2*M_PI/angleDiv*j);
             newClock = newClock*(minDist+distanceStep*i);
-            if(inLOS(position+player->getPosition()+sf::Vector2f(radius,radius),pos+newClock)&&inLOS(sf::Vector2f(1920/2,1080/2),pos+newClock)){
+            if(inLOS(position+player->getPosition()+sf::Vector2f(radius,radius),pos+newClock)&&inLOS(player->getScreenPos(),pos+newClock)){
                 morbius = true;
                 out = newClock+pos;
             }
         }
     }
     if(morbius) {
-        MovePosition(out, speed);
+        MoveScreenPosition(out, speed);
     }
     return morbius;
 }
@@ -114,7 +120,7 @@ void Enemy::MoveToPlayer(){
         if(inLOS(position+player->getPosition()+sf::Vector2f(radius,radius),sf::Vector2f(1920/2,1080/2))) {
             inPlayerLOS = true;
             gfx.setFillColor(sf::Color::Blue);
-            MovePosition(sf::Vector2f(1920/2,1080/2), speed);
+            MoveScreenPosition(player->getScreenPos(), speed);
         } else{
             if(moveToNearLOSPoint(sf::Vector2f(1920/2,1080/2))) {
                 gfx.setFillColor(sf::Color::Yellow);
