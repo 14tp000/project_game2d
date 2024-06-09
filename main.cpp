@@ -15,6 +15,7 @@
 #include "rangedEnemy.h"
 #include "renderManager.h"
 #include "Boss.h"
+
 //https://www.sfml-dev.org/tutorials/2.0/graphics-shader.php, and https://thebookofshaders.com/edit.php used for help with adding shaders
 
 
@@ -83,32 +84,36 @@ auto main() -> int {
 
     std::vector<Enemy*> enemies;
 
-//    enemies.push_back(new rangedEnemy(sf::Vector2f(500,500),50, &mapColls.img, &player,100,200,&rM, 350));
-//    enemies.push_back(new meleeEnemy(sf::Vector2f(1000,1000),50, &mapColls.img, &player,100, &rM, 420));
+    enemies.push_back(new rangedEnemy(sf::Vector2f(500,500),50, &mapColls.img, &player,100,200,&rM, 350));
+    enemies.push_back(new meleeEnemy(sf::Vector2f(1000,1000),50, &mapColls.img, &player,100, &rM, 420));
 
     std::vector<sf::Vector2f> pos;
-    pos.push_back(sf::Vector2f(3000,1500));
-    pos.push_back(sf::Vector2f(2000,2200));
-    pos.push_back(sf::Vector2f(3000,2500));
+    pos.push_back(sf::Vector2f(3000,1800));
+    pos.push_back(sf::Vector2f(2800,2200));
+    pos.push_back(sf::Vector2f(3000,2400));
 
 
+    auto delay2 = wait(nullptr, &rM, 1.f);
+    auto atk2 = attack2(&delay2, &rM, 10,10,300, 100, 2.f, 0.5f);
+    auto delay1 = wait(&atk2, &rM, 2.f);
+    auto atk1 = attack1(&delay1, &rM, 8, 20, 0.5f, 6.f);
+    delay2.setNext(&atk1);
 
-    auto atk2 = attack2(nullptr, &rM);
-    auto atk1 = attack1(&atk2, &rM);
-    atk2.setNext(&atk1);
+    //auto boss = new Boss(sf::Vector2f(3000,2000),80, &mapColls.img, &player,1000, &rM, 50, &pos, 1500, &atk1);
 
-    enemies.push_back(new Boss(sf::Vector2f(3000,2000),80, &mapColls.img, &player,1000, &rM, 150, &pos, 1500, &atk1));
-    atk1.setBoss(enemies[0]);
-    atk2.setBoss(enemies[0]);
+//    enemies.push_back(boss);
+//    atk1.setBoss(boss);
+//    atk2.setBoss(boss);
+//    delay1.setBoss(boss);
+//    delay2.setBoss(boss);
 
-//    enemies.push_back(new meleeEnemy(sf::Vector2f(4000,1000),50, &mapColls.img, &player,100, &rM, 420));
-//    enemies.push_back(new rangedEnemy(sf::Vector2f(4000,850),50, &mapColls.img, &player,100, 200,&rM, 350));
-//    enemies.push_back(new meleeEnemy(sf::Vector2f(4000,650),50, &mapColls.img, &player,100,&rM, 420));
+    enemies.push_back(new meleeEnemy(sf::Vector2f(4000,1000),50, &mapColls.img, &player,100, &rM, 420));
+    enemies.push_back(new rangedEnemy(sf::Vector2f(4000,850),50, &mapColls.img, &player,100, 200,&rM, 350));
+    enemies.push_back(new meleeEnemy(sf::Vector2f(4000,650),50, &mapColls.img, &player,100,&rM, 420));
 
-    Staff wpn = Staff(10.f, 100.f, sf::Vector2f(borderX/2, borderY/2), 0.5f, player, enemies,&rM);
+    Staff wpn = Staff(20.f, 20, 2, 100.f, sf::Vector2f(borderX/2, borderY/2), 0.5f, player, enemies,&rM);
 
-    RangedWpn rWpn = RangedWpn(10.f, 0.f, sf::Vector2f(borderX/2, borderY/2),0.2f, player, enemies,&rM);
-
+    RangedWpn rWpn = RangedWpn(10.f, 20, 1.5, 0.f, sf::Vector2f(borderX/2, borderY/2),0.2f, player, enemies,&rM);
 
 
 
@@ -141,13 +146,12 @@ auto main() -> int {
             window.clear(sf::Color::Black);
 
 
-            //canvas.setPosition(sf::Vector2f(borderX-player.getPosition().x,borderY-player.getPosition().y));
             canvas.setPosition(player.getPosition());
             window.draw(canvas);
 
 
 
-            std::cout<<"fps: "<<1/dt.asSeconds()<<"\n";
+            //std::cout<<"fps: "<<1/dt.asSeconds()<<"\n";
 
             player.moveDir(getMoveDir(dt.asSeconds()/1.5));
             player.shunt(80, dt.asSeconds());
@@ -161,6 +165,7 @@ auto main() -> int {
 
             if (sf::Mouse::isButtonPressed(sf::Mouse::Right)&& wpn.attackCd<=counter)
             {
+                wpn.attackGfx.setFillColor(sf::Color::White);
                 counter = 0;
             }
 
@@ -186,7 +191,7 @@ auto main() -> int {
             player.update();
             rM.DrawAll();
 
-//            window.draw(sf::RectangleShape(sf::Vector2f(borderX,borderY)), &shader);
+            window.draw(sf::RectangleShape(sf::Vector2f(borderX,borderY)), &shader);
             window.draw(sf::RectangleShape(sf::Vector2f(borderX,borderY)), &slider);
             window.display();
             counter +=dt.asSeconds();

@@ -7,51 +7,11 @@
 #include "Enemy.h"
 #include "SFML/Graphics.hpp"
 #include "vector"
-
-class attackMove {
-    attackMove *next;
-public:
-    float duration;
-    float counter = 0;
-    Enemy *boss;
-    bool finished = false;
-    renderManager *rM;
-
-    virtual void attackPlayer() = 0;
-
-    attackMove(attackMove *nxt, float dur, renderManager *renderM) {
-        next = nxt;
-        duration = dur;
-        rM = renderM;
-    }
-
-    attackMove *getNext() { return next; }
-
-    void setBoss(Enemy *bss) { boss = bss; }
-
-    void setNext(attackMove *atk) { next = atk; }
-
-    void Reset() {
-        counter = 0;
-        finished = false;
-    }
-
-    virtual void Render() =0;
-};
-
-class attack1: public attackMove{
-public:
-    void attackPlayer() override;
-    void Render() override;
-    attack1(attackMove* nxt,renderManager* renderM): attackMove(nxt, 2.f,renderM){};
-};
-
-class attack2: public attackMove{
-public:
-    void attackPlayer() override;
-    void Render() override;
-    attack2(attackMove* nxt,renderManager* renderM): attackMove(nxt,4.f, renderM){};
-};
+#include "Projectile.h"
+#include "vmath.h"
+#include "cmath"
+#include "attackMove.h"
+#include "memory"
 
 
 class Boss: public Enemy {
@@ -60,8 +20,11 @@ class Boss: public Enemy {
     float attackDist;
     attackMove* attack;
 public:
+    std::vector<std::unique_ptr<Projectile>> bullets;
+    int projectileI = 0;
+    int maxNumProjectile = 100;
     Boss(sf::Vector2f startPos, float rad, sf::Image* collMap, Player* pl, float hp, renderManager* rM, float speed, std::vector<sf::Vector2f>* points, float atkDist, attackMove* atk):
-    Enemy(startPos,rad,collMap,pl,hp,rM,speed){
+    Enemy(startPos,rad,collMap,pl,hp,rM,speed,0){
         gfx.setFillColor(sf::Color::Magenta);
         patrolPts = points;
         attackDist = atkDist;
@@ -71,5 +34,51 @@ public:
     void damagePlayer(float ammount) override;
 };
 
+class attack1: public attackMove{
+    float ctr = 0;
+    float delay;
+    Boss* boss;
+    float angleOffset = 0;
+    float angleOffsetStep = 1;
+public:
+    int numBullets;
+    float radius;
+    void Render() override;
+    void attackPlayer() override;
+    void setBoss(Boss *bss) { boss = bss; }
+    attack1(attackMove* nxt,renderManager* renderM, int numCircles, float rad, float dl, float duration): attackMove(nxt, duration,renderM){
+        numBullets = numCircles;
+        radius = rad;
+        delay = dl;
+    };
+};
 
+class attack2: public attackMove{
+    Boss* boss;
+    float radius;
+    float activate;
+public:
+    int numBulletsX;
+    int numBulletsY;
+    float step;
+    void attackPlayer() override;
+    void Render() override;
+    void setBoss(Boss *bss) { boss = bss; }
+    attack2(attackMove* nxt,renderManager* renderM, int numX, int numY, float stp, float rad, float duration, float act): attackMove(nxt,duration, renderM){
+        numBulletsX = numX;
+        numBulletsY = numY;
+        step = stp;
+        radius = rad;
+        activate = act;
+    };
+};
+
+class wait: public attackMove{
+    Boss* boss;
+public:
+    void attackPlayer() override;
+    void Render() override;
+    void setBoss(Boss *bss) { boss = bss; }
+    wait(attackMove* nxt,renderManager* renderM,float duration): attackMove(nxt,duration, renderM){};
+};
 #endif //PROJECT_GAME2D_BOSS_H

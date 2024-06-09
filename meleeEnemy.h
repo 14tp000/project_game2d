@@ -10,7 +10,7 @@
 class meleeEnemy: public Enemy{
 public:
     void damagePlayer(float ammount) override;
-    meleeEnemy(sf::Vector2f startPos, float rad, sf::Image* collMap, Player* pl, float hp, renderManager* rM, float speed): Enemy(startPos,rad,collMap,pl,hp,rM,speed){};
+    meleeEnemy(sf::Vector2f startPos, float rad, sf::Image* collMap, Player* pl, float hp, renderManager* rM, float speed): Enemy(startPos,rad,collMap,pl,hp,rM,speed,1){};
 };
 
 

@@ -7,7 +7,7 @@
 #include "vmath.h"
 #include "cmath"
 #include "iostream"
-#include <vector>
+#include <ctime>
 
 
 void RangedWpn::hit() {
@@ -15,6 +15,9 @@ void RangedWpn::hit() {
 }
 
 void RangedWpn::Update() {
+    std::srand(static_cast<unsigned int>(std::time(nullptr)));
+    float num = std::rand()%100;
+
     for(int i = 0;i<bullets.size();i++){
         if(player->isIn(bullets[i]->getGlobalPos())){ bullets[i]->isKilled = true; }
         if(!bullets[i]->isKilled) {
@@ -23,11 +26,15 @@ void RangedWpn::Update() {
             bullets[i]->Update();
             renderM->addObj(&(bullets[i]->gfx));
             for (int j = 0; j < enemies->size(); j++) {
-                //std::cout<<"erad: "<<enemies[j]->radius<<" brad: "<<bullets[i]->radius<<" dist = "<<vmath::distV(bullets[i]->getGlobalPos(), enemies[j]->getGlobalPos())<<"\n";
                 if (vmath::distV(bullets[i]->getGlobalPos(), (*enemies)[j]->getGlobalPos()) <=
                     (*enemies)[j]->radius + bullets[i]->radius) {
                     (*enemies)[j]->knockBack(bullets[i]->direction, -50);
-                    (*enemies)[j]->damage(10);
+                    if(critChance>=num){
+                        (*enemies)[i]->damage(damage*critMultiplier);;
+                    }
+                    else{
+                        (*enemies)[j]->damage(10);
+                    }
                     bullets[i]->isKilled = true;
                 }
             }

@@ -19,6 +19,7 @@ class Enemy: public Destructible{
         float radius;
         float aggroRadius = 700.f;
         float dt = 1;
+        float knockbackForce;
         sf::Image* collMap; //TODO: zrobić lepiej
         Player* player;
         bool inPlayerLOS = false;
@@ -35,9 +36,9 @@ class Enemy: public Destructible{
         bool collides(sf::Vector2f pt);
         void knockBack(sf::Vector2f dir, float force);
         virtual void damagePlayer(float ammount){std::cout<<"to nie powinno byc wywolywane";};
-        sf::Vector2f getScreenPos() const;
-        sf::Vector2f getGlobalPos() const;
-        Enemy(sf::Vector2f startPos, float rad, sf::Image* collMap, Player* pl, float hp, renderManager* rM, float spd){
+        sf::Vector2f getScreenPos();
+        sf::Vector2f getGlobalPos();
+        Enemy(sf::Vector2f startPos, float rad, sf::Image* collMap, Player* pl, float hp, renderManager* rM, float spd, float kbForce){
             radius = rad;
             position = startPos;
             gfx = sf::CircleShape(rad, 32);
@@ -47,6 +48,7 @@ class Enemy: public Destructible{
             currentHP = maxHP;
             renderM = rM;
             speed = spd;
+            knockbackForce = kbForce;
         }
 };
 

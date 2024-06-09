@@ -30,7 +30,7 @@ bool Enemy::collides(sf::Vector2f pt) {
 }
 
 void Enemy::knockBack(sf::Vector2f dir, float force) {
-    position-=dir*force;
+    position-=dir*force*knockbackForce;
 }
 
 bool Enemy::inLOS(sf::Vector2f from, sf::Vector2f to){
@@ -65,11 +65,11 @@ void Enemy::MoveGlobalPosition(sf::Vector2f pos, float spd) {
     position-=dir*spd*dt;
 }
 
-sf::Vector2f Enemy::getScreenPos() const{
+sf::Vector2f Enemy::getScreenPos(){
     return position+player->getPosition()+sf::Vector2f(radius, radius);
 }
 
-sf::Vector2f Enemy::getGlobalPos() const{
+sf::Vector2f Enemy::getGlobalPos(){
     return position+sf::Vector2f(radius,radius);
 }
 

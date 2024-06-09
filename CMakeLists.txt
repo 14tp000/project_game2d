@@ -42,5 +42,9 @@ add_executable(project_game2d main.cpp
         renderManager.h
         Boss.cpp
         Boss.h
+        attackMove.cpp
+        attackMove.h
+        Talisman.cpp
+        Talisman.h
 )
 target_link_libraries(project_game2d sfml-graphics)

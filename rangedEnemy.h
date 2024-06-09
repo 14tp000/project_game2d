@@ -19,7 +19,7 @@ public:
     void MoveToPlayer() override;
     void Update() override;
     rangedEnemy(sf::Vector2f startPos, float rad, sf::Image* collMap, Player* pl, float hp, float stopD, renderManager* rM, float speed):
-    Enemy(startPos,rad,collMap,pl,hp,rM,speed){stopDist = stopD;};
+    Enemy(startPos,rad,collMap,pl,hp,rM,speed,1){stopDist = stopD;};
 };
 
 

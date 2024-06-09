@@ -16,6 +16,7 @@ public:
     sf::Vector2f position;
     sf::Vector2f playerPos;
     bool isKilled;
+    bool canDamage;
     Projectile(float spd, sf::Vector2f dir, float rad, sf::Vector2f startPos, sf::Vector2f playerPos){
         speed = spd;
         direction = dir;
@@ -24,10 +25,14 @@ public:
         gfx = sf::CircleShape(radius, 12);
         gfx.setPosition(startPos-sf::Vector2f(radius, radius)+playerPos);
         isKilled = false;
+        canDamage = true;
     }
     void Update();
     sf::Vector2f getScreenPos();
     sf::Vector2f getGlobalPos();
+    void setPosition(sf::Vector2f pos){
+        position = pos;
+    }
 };
 
 

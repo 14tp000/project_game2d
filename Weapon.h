@@ -17,6 +17,8 @@ class Weapon {
 public:
     std::vector<Enemy*>* enemies;
     float damage;
+    float critChance;
+    float critMultiplier;
     float attackCd;
     float range;
     sf::Vector2f center;
@@ -32,8 +34,10 @@ public:
     void remove(){
         enemies->pop_back();
     }
-    Weapon(float dmg, float rn, sf::Vector2f cnt, float cd, Player& plr, std::vector<Enemy*>& enms, renderManager* rM){
+    Weapon(float dmg, float cc, float cm, float rn, sf::Vector2f cnt, float cd, Player& plr, std::vector<Enemy*>& enms, renderManager* rM){
         damage = dmg;
+        critChance = cc;
+        critMultiplier = cm;
         center = cnt;
         attackCd = cd;
         range = rn;
