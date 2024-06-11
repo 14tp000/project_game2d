@@ -35,7 +35,7 @@ class Enemy: public Destructible{
         void shunt(int rayNum, float shuntDist);
         bool collides(sf::Vector2f pt);
         void knockBack(sf::Vector2f dir, float force);
-        virtual void damagePlayer(float ammount){std::cout<<"to nie powinno byc wywolywane";};
+        virtual void damagePlayer(float ammount){std::cout<<"to nie powinno byc wywolywane";}
         sf::Vector2f getScreenPos();
         sf::Vector2f getGlobalPos();
         Enemy(sf::Vector2f startPos, float rad, sf::Image* collMap, Player* pl, float hp, renderManager* rM, float spd, float kbForce){

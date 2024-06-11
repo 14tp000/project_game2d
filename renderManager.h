@@ -9,15 +9,20 @@
 
 class renderManager {
     std::vector<sf::Drawable*> drawableObjs;
+    std::vector<sf::Drawable*> drawableGUI;
     sf::RenderWindow* window;
 public:
     void addObj(sf::Drawable* obj){
         drawableObjs.push_back(obj);
     }
+    void addGUI(sf::Drawable* obj){
+        drawableGUI.push_back(obj);
+    }
     renderManager(sf::RenderWindow* wdw){
         window = wdw;
     }
     void DrawAll();
+    void DrawGUI();
 };
 
 

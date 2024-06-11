@@ -10,3 +10,10 @@ void renderManager::DrawAll() {
     }
     drawableObjs.clear();
 }
+
+void renderManager::DrawGUI() {
+    for(sf::Drawable* d : drawableGUI){
+        window->draw(*d);
+    }
+    drawableGUI.clear();
+}

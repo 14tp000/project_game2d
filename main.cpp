@@ -6,8 +6,6 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "vmath.h"
-#include "./maps/Map.h"
-#include "Weapon.h"
 #include "Staff.h"
 #include "RangedWpn.h"
 #include "vector"
@@ -15,13 +13,14 @@
 #include "rangedEnemy.h"
 #include "renderManager.h"
 #include "Boss.h"
-
+#include "Talismans.h"
+#include "Collectible.h"
+#include <random> // https://stackoverflow.com/questions/19665818/generate-random-numbers-using-c11-random-library
 //https://www.sfml-dev.org/tutorials/2.0/graphics-shader.php, and https://thebookofshaders.com/edit.php used for help with adding shaders
 
 
-sf::Vector2f getMoveDir(float dt){
+sf::Vector2f getMoveDir(float dt,float speed){
     sf::Vector2f dir = sf::Vector2f(0, 0);
-    float speed = 700;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
     {
         dir+=sf::Vector2f(-1,0);
@@ -59,6 +58,13 @@ void updateEnemies(std::vector<Enemy*>& enemies, float dt){
 
 
 auto main() -> int {
+    std::random_device rd;
+    std::mt19937 mt(rd());
+    std::uniform_real_distribution<double> dist(0, 100);
+
+//    for (int i = 1; i < 11; i++) {
+//        std::cout << std::rand() % 100 << "\n";
+//    }
 
     const unsigned int borderX = 1920;
     const unsigned int borderY = 1080;
@@ -69,23 +75,27 @@ auto main() -> int {
             sf::Style::Fullscreen, sf::ContextSettings(0, 0, 8)
     );
 
-    Map map = Map("..\\maps\\mapImages\\map1.png");
+    sf::Image map;
+    map.loadFromFile("..\\maps\\mapImages\\map1.png");
     sf::Texture mTexture;
-    mTexture.loadFromImage(map.img);
+    mTexture.loadFromImage(map);
 
-    Map mapColls = Map("..\\maps\\mapImages\\map1_collisions.png");
+
+    sf::Image mapColls;
+    mapColls.loadFromFile("..\\maps\\mapImages\\map1_collisions.png");
     sf::Texture cTexture;
+    cTexture.loadFromImage(mapColls);
 
     renderManager rM = renderManager(&window);
 
-    Player player = Player(0, 0,mapColls.img,100,&rM);
-    cTexture.loadFromImage(mapColls.img);
+    Player player = Player(0, 0,mapColls,100,&rM, 466);
 
+    player.addTalisman(new MovementOnCrit(&player, 1.f, 1.3f, sf::Vector2f(100,100)));
 
     std::vector<Enemy*> enemies;
 
-    enemies.push_back(new rangedEnemy(sf::Vector2f(500,500),50, &mapColls.img, &player,100,200,&rM, 350));
-    enemies.push_back(new meleeEnemy(sf::Vector2f(1000,1000),50, &mapColls.img, &player,100, &rM, 420));
+    //enemies.push_back(new rangedEnemy(sf::Vector2f(500,500),50, &mapColls, &player,100,200,&rM, 350));
+    enemies.push_back(new meleeEnemy(sf::Vector2f(1000,1000),50, &mapColls, &player,100, &rM, 420));
 
     std::vector<sf::Vector2f> pos;
     pos.push_back(sf::Vector2f(3000,1800));
@@ -107,15 +117,17 @@ auto main() -> int {
 //    delay1.setBoss(boss);
 //    delay2.setBoss(boss);
 
-    enemies.push_back(new meleeEnemy(sf::Vector2f(4000,1000),50, &mapColls.img, &player,100, &rM, 420));
-    enemies.push_back(new rangedEnemy(sf::Vector2f(4000,850),50, &mapColls.img, &player,100, 200,&rM, 350));
-    enemies.push_back(new meleeEnemy(sf::Vector2f(4000,650),50, &mapColls.img, &player,100,&rM, 420));
+    enemies.push_back(new meleeEnemy(sf::Vector2f(4000,1000),50, &mapColls, &player,100, &rM, 420));
+    enemies.push_back(new rangedEnemy(sf::Vector2f(4000,850),50, &mapColls, &player,100, 200,&rM, 350));
+    enemies.push_back(new meleeEnemy(sf::Vector2f(4000,650),50, &mapColls, &player,100,&rM, 420));
 
     Staff wpn = Staff(20.f, 20, 2, 100.f, sf::Vector2f(borderX/2, borderY/2), 0.5f, player, enemies,&rM);
 
-    RangedWpn rWpn = RangedWpn(10.f, 20, 1.5, 0.f, sf::Vector2f(borderX/2, borderY/2),0.2f, player, enemies,&rM);
+    RangedWpn rWpn = RangedWpn(1.f, 50, 1.5, 0.f, sf::Vector2f(borderX/2, borderY/2),0.2f, player, enemies,&rM);
 
+    std::vector<Collectible*> collectibles;
 
+    collectibles.push_back(new HealCollectible(&player, 25, sf::Vector2f(500,500), sf::Color::Red, 20));
 
     sf::Shader shader;
     sf::Shader slider;
@@ -131,7 +143,12 @@ auto main() -> int {
     else {
         sf::Clock deltaClock;
         sf::Time dt = deltaClock.restart();//https://en.sfml-dev.org/forums/index.php?topic=7068.0
+
         while (window.isOpen()) {
+            int critNumber = (int)dist(mt);
+            rWpn.critNumber = critNumber;
+            wpn.critNumber = critNumber;
+
             auto event = sf::Event();
             while (window.pollEvent(event)) {
                 if (event.type == sf::Event::Closed)
@@ -153,7 +170,7 @@ auto main() -> int {
 
             //std::cout<<"fps: "<<1/dt.asSeconds()<<"\n";
 
-            player.moveDir(getMoveDir(dt.asSeconds()/1.5));
+            player.moveDir(getMoveDir(dt.asSeconds(), player.movementSpeed));
             player.shunt(80, dt.asSeconds());
             rWpn.dt = dt.asSeconds();
             rWpn.fireDir = vmath::normaliseVector(sf::Vector2f(sf::Mouse::getPosition())-sf::Vector2f(borderX/2, borderY/2));
@@ -191,8 +208,20 @@ auto main() -> int {
             player.update();
             rM.DrawAll();
 
+            for(auto t: player.talismans){
+                t->dt = dt.asSeconds();
+            }
+
+            for(auto c: collectibles){
+                c->Update();
+            }
+
+            player.updateTalismans();
+
             window.draw(sf::RectangleShape(sf::Vector2f(borderX,borderY)), &shader);
             window.draw(sf::RectangleShape(sf::Vector2f(borderX,borderY)), &slider);
+
+            rM.DrawGUI();
             window.display();
             counter +=dt.asSeconds();
             counter2 +=dt.asSeconds();

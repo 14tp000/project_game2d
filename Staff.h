@@ -10,7 +10,7 @@
 
 class Staff: public Weapon{
 public:
-    void hit();
+    void hit() override;
     using Weapon::Weapon; // https://stackoverflow.com/questions/347358/inheriting-constructors
 };
 

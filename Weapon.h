@@ -17,24 +17,24 @@ class Weapon {
 public:
     std::vector<Enemy*>* enemies;
     float damage;
-    float critChance;
+    int critChance;
     float critMultiplier;
     float attackCd;
     float range;
     sf::Vector2f center;
-    virtual void hit();
+    virtual void hit()=0;
     sf::CircleShape attackGfx;
     Player* player;
     float dt;
     renderManager* renderM;
-
+    int critNumber;
     void add(Enemy* enm){
         enemies->push_back(enm);
     }
     void remove(){
         enemies->pop_back();
     }
-    Weapon(float dmg, float cc, float cm, float rn, sf::Vector2f cnt, float cd, Player& plr, std::vector<Enemy*>& enms, renderManager* rM){
+    Weapon(float dmg, int cc, float cm, float rn, sf::Vector2f cnt, float cd, Player& plr, std::vector<Enemy*>& enms, renderManager* rM){
         damage = dmg;
         critChance = cc;
         critMultiplier = cm;

@@ -4,8 +4,9 @@
 #include <cmath>
 #include "vmath.h"
 #include "Player.h"
-#include "./maps/Map.h"
 #include "iostream"
+
+
 
 void Player::update(){
     shape.setPosition(1920/2-radius, 1080/2-radius);
@@ -29,7 +30,7 @@ void Player::damage(float ammount) {
 }
 
 void Player::die() {
-    std::cout<<"Rip\n";
+    //std::cout<<"Rip\n";
 }
 
 void Player::shunt(int rayNum, float shuntDist){
@@ -47,3 +48,5 @@ void Player::moveDir(sf::Vector2f dir){
     position-=dir;
 }
 sf::CircleShape Player::getShape(){return shape;}
+
+

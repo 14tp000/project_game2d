@@ -20,8 +20,6 @@ add_executable(project_game2d main.cpp
         Player.h
         vmath.cpp
         vmath.h
-        maps/Map.cpp
-        maps/Map.h
         Enemy.cpp
         Enemy.h
         Weapon.cpp
@@ -44,7 +42,9 @@ add_executable(project_game2d main.cpp
         Boss.h
         attackMove.cpp
         attackMove.h
-        Talisman.cpp
-        Talisman.h
+        Talismans.cpp
+        Talismans.h
+        Collectible.cpp
+        Collectible.h
 )
 target_link_libraries(project_game2d sfml-graphics)

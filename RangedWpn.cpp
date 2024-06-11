@@ -7,7 +7,6 @@
 #include "vmath.h"
 #include "cmath"
 #include "iostream"
-#include <ctime>
 
 
 void RangedWpn::hit() {
@@ -15,9 +14,6 @@ void RangedWpn::hit() {
 }
 
 void RangedWpn::Update() {
-    std::srand(static_cast<unsigned int>(std::time(nullptr)));
-    float num = std::rand()%100;
-
     for(int i = 0;i<bullets.size();i++){
         if(player->isIn(bullets[i]->getGlobalPos())){ bullets[i]->isKilled = true; }
         if(!bullets[i]->isKilled) {
@@ -29,11 +25,15 @@ void RangedWpn::Update() {
                 if (vmath::distV(bullets[i]->getGlobalPos(), (*enemies)[j]->getGlobalPos()) <=
                     (*enemies)[j]->radius + bullets[i]->radius) {
                     (*enemies)[j]->knockBack(bullets[i]->direction, -50);
-                    if(critChance>=num){
-                        (*enemies)[i]->damage(damage*critMultiplier);;
+                    if(critChance>=critNumber){
+                        std::cout<<"crit";
+                        (*enemies)[j]->damage(damage*critMultiplier);
+                        if(!player->onCrit) {
+                            player->onCrit = true;
+                        }
                     }
                     else{
-                        (*enemies)[j]->damage(10);
+                        (*enemies)[j]->damage(damage);
                     }
                     bullets[i]->isKilled = true;
                 }

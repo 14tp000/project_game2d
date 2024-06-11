@@ -13,7 +13,8 @@ class RangedWpn:  public Weapon{
 public:
     std::vector<Projectile*> bullets;
     sf::Vector2f fireDir;
-    void hit();
+    int critNumber;
+    void hit() override;
     void Update();
     using Weapon::Weapon;
 };
