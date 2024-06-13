@@ -1,10 +1,8 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
-#include <SFML/Window/Keyboard.hpp>
 #include <cmath>
 #include "vmath.h"
 #include "Player.h"
-#include "iostream"
 
 
 

@@ -15,6 +15,7 @@
 
 class Weapon {
 public:
+    float counter = 0;
     std::vector<Enemy*>* enemies;
     float damage;
     int critChance;
@@ -28,22 +29,19 @@ public:
     float dt;
     renderManager* renderM;
     int critNumber;
-    void add(Enemy* enm){
-        enemies->push_back(enm);
+    virtual void Update(float dt){
+        counter+=dt;
     }
-    void remove(){
-        enemies->pop_back();
-    }
-    Weapon(float dmg, int cc, float cm, float rn, sf::Vector2f cnt, float cd, Player& plr, std::vector<Enemy*>& enms, renderManager* rM){
+    Weapon(float dmg, int cc, float cm, float rn, float cd, Player* plr, std::vector<Enemy*>* enms, renderManager* rM){
         damage = dmg;
         critChance = cc;
         critMultiplier = cm;
-        center = cnt;
+        center = player->getScreenPos();
         attackCd = cd;
         range = rn;
         attackGfx = sf::CircleShape(range, 32);
-        player = &plr;
-        enemies = &enms;
+        player = plr;
+        enemies = enms;
         renderM = rM;
     }
 };

@@ -36,5 +36,19 @@ public:
             Collectible(plr, radius, pos, color)  {healAmmount = ammount; }
 };
 
+class MaxHPUp: public Collectible{
+public:
+    float boostAmmount;
+    void Trigger() override;
+    MaxHPUp(Player* plr, float radius, sf::Vector2f  pos, sf::Color color, float ammount):
+            Collectible(plr, radius, pos, color)  {boostAmmount = ammount; }
+};
+
+class UnlockTalisman: public Collectible{
+public:
+    void Trigger() override;
+    UnlockTalisman(Player* plr, float radius, sf::Vector2f  pos, sf::Color color):
+        Collectible(plr, radius, pos, color){};
+};
 
 #endif //PROJECT_GAME2D_COLLECTIBLE_H

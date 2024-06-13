@@ -15,7 +15,7 @@ public:
     sf::Vector2f fireDir;
     int critNumber;
     void hit() override;
-    void Update();
+    void Update(float dt) override;
     using Weapon::Weapon;
 };
 

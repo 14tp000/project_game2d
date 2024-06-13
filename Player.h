@@ -15,7 +15,7 @@ class Player;
 class Talisman {
 public:
     Player* player;
-    bool enabled = true;
+    bool enabled = false;
     bool active = false;
     float duration;
     float counter;
@@ -48,10 +48,14 @@ public:
     float radius = 50;
     float movementSpeed;
     renderManager* renderM;
-    std::vector<Talisman*> talismans;
 
+    std::vector<Talisman*> talismans;
+    int talismanI = 0;
     ////talisman flags
     bool onCrit = false;
+    bool onMeleeHit = false;
+
+
 
     Player(float x, float y, sf::Image collMap, float mHP, renderManager* rM, float spd){
         shape = sf::CircleShape(radius,32);
@@ -69,6 +73,11 @@ public:
         if(currentHP>maxHP) { currentHP = maxHP;}
     }
 
+    void increaseMaxHP(float ammount){
+        maxHP+=ammount;
+        heal(ammount);
+    }
+
     void addTalisman(Talisman* talisman){
         talismans.push_back(talisman);
     }
@@ -80,6 +89,7 @@ public:
     }
     void resetFlags(){
         onCrit = false;
+        onMeleeHit = false;
     }
     bool isIn(sf::Vector2f point);
     void update();

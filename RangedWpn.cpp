@@ -3,17 +3,20 @@
 //
 
 #include "RangedWpn.h"
-#include "Weapon.h"
 #include "vmath.h"
 #include "cmath"
 #include "iostream"
 
 
 void RangedWpn::hit() {
-    bullets.push_back(new Projectile(700, fireDir,20, center-player->getPosition(), player->getPosition()));
+    if(counter>=attackCd) {
+        bullets.push_back(new Projectile(700, fireDir, 20, center - player->getPosition(), player->getPosition()));
+        counter = 0;
+    }
 }
 
-void RangedWpn::Update() {
+void RangedWpn::Update(float dt) {
+    counter+=dt;
     for(int i = 0;i<bullets.size();i++){
         if(player->isIn(bullets[i]->getGlobalPos())){ bullets[i]->isKilled = true; }
         if(!bullets[i]->isKilled) {

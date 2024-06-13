@@ -19,3 +19,14 @@ void Collectible::Update() {
 void HealCollectible::Trigger() {
     player->heal(healAmmount);
 }
+
+void MaxHPUp::Trigger() {
+    player->increaseMaxHP(boostAmmount);
+}
+
+void UnlockTalisman::Trigger() {
+    if(player->talismanI<player->talismans.size()) {
+        player->talismans[player->talismanI]->Enable();
+        player->talismanI++;
+    }
+}

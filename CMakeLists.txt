@@ -46,5 +46,7 @@ add_executable(project_game2d main.cpp
         Talismans.h
         Collectible.cpp
         Collectible.h
+        WeaponManager.cpp
+        WeaponManager.h
 )
 target_link_libraries(project_game2d sfml-graphics)

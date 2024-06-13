@@ -4,17 +4,17 @@
 #include <SFML/Window/Keyboard.hpp>
 #include <cmath>
 #include "Player.h"
-#include "Enemy.h"
 #include "vmath.h"
-#include "Staff.h"
-#include "RangedWpn.h"
 #include "vector"
 #include "meleeEnemy.h"
 #include "rangedEnemy.h"
+#include "Staff.h"
+#include "RangedWpn.h"
 #include "renderManager.h"
 #include "Boss.h"
 #include "Talismans.h"
 #include "Collectible.h"
+#include "WeaponManager.h"
 #include <random> // https://stackoverflow.com/questions/19665818/generate-random-numbers-using-c11-random-library
 //https://www.sfml-dev.org/tutorials/2.0/graphics-shader.php, and https://thebookofshaders.com/edit.php used for help with adding shaders
 
@@ -62,10 +62,6 @@ auto main() -> int {
     std::mt19937 mt(rd());
     std::uniform_real_distribution<double> dist(0, 100);
 
-//    for (int i = 1; i < 11; i++) {
-//        std::cout << std::rand() % 100 << "\n";
-//    }
-
     const unsigned int borderX = 1920;
     const unsigned int borderY = 1080;
     const unsigned int mapX = 5846;
@@ -92,8 +88,10 @@ auto main() -> int {
 
     player.addTalisman(new MovementOnCrit(&player, 1.f, 1.3f, sf::Vector2f(100,100)));
 
-    std::vector<Enemy*> enemies;
+//    CConMeleeHit ccMH_talisman = CConMeleeHit(&player, 1.f, 100, sf::Vector2f (200, 100));
+//    player.addTalisman(&ccMH_talisman);
 
+    std::vector<Enemy*> enemies;
     //enemies.push_back(new rangedEnemy(sf::Vector2f(500,500),50, &mapColls, &player,100,200,&rM, 350));
     enemies.push_back(new meleeEnemy(sf::Vector2f(1000,1000),50, &mapColls, &player,100, &rM, 420));
 
@@ -121,13 +119,17 @@ auto main() -> int {
     enemies.push_back(new rangedEnemy(sf::Vector2f(4000,850),50, &mapColls, &player,100, 200,&rM, 350));
     enemies.push_back(new meleeEnemy(sf::Vector2f(4000,650),50, &mapColls, &player,100,&rM, 420));
 
-    Staff wpn = Staff(20.f, 20, 2, 100.f, sf::Vector2f(borderX/2, borderY/2), 0.5f, player, enemies,&rM);
+    Staff wpn = Staff(20.f, 20,2.f,100.f, 0.5f, &player, &enemies, &rM);
+//    RangedWpn rWpn = RangedWpn(10.f, 50, 1.5, 0.f, sf::Vector2f(borderX/2, borderY/2),0.2f, player, enemies,&rM);
 
-    RangedWpn rWpn = RangedWpn(1.f, 50, 1.5, 0.f, sf::Vector2f(borderX/2, borderY/2),0.2f, player, enemies,&rM);
+    WeaponManager WM;
+    WM.addWeapon(&wpn);
 
     std::vector<Collectible*> collectibles;
 
     collectibles.push_back(new HealCollectible(&player, 25, sf::Vector2f(500,500), sf::Color::Red, 20));
+    collectibles.push_back(new MaxHPUp(&player, 25, sf::Vector2f(500,800), sf::Color::Green, 100));
+    collectibles.push_back(new UnlockTalisman(&player, 25, sf::Vector2f(700,500), sf::Color::Blue));
 
     sf::Shader shader;
     sf::Shader slider;
@@ -146,8 +148,7 @@ auto main() -> int {
 
         while (window.isOpen()) {
             int critNumber = (int)dist(mt);
-            rWpn.critNumber = critNumber;
-            wpn.critNumber = critNumber;
+            WM.SetCritNumbers(critNumber);
 
             auto event = sf::Event();
             while (window.pollEvent(event)) {
@@ -172,25 +173,25 @@ auto main() -> int {
 
             player.moveDir(getMoveDir(dt.asSeconds(), player.movementSpeed));
             player.shunt(80, dt.asSeconds());
-            rWpn.dt = dt.asSeconds();
-            rWpn.fireDir = vmath::normaliseVector(sf::Vector2f(sf::Mouse::getPosition())-sf::Vector2f(borderX/2, borderY/2));
-            rWpn.Update();
+
+//            rWpn.fireDir = vmath::normaliseVector(sf::Vector2f(sf::Mouse::getPosition())-sf::Vector2f(borderX/2, borderY/2));
+
 
 
             updateEnemies(enemies, dt.asSeconds());
 
 
-            if (sf::Mouse::isButtonPressed(sf::Mouse::Right)&& wpn.attackCd<=counter)
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
             {
-                wpn.attackGfx.setFillColor(sf::Color::White);
-                counter = 0;
+                WM.Attack(0);
             }
 
-            if (sf::Mouse::isButtonPressed(sf::Mouse::Left)&& rWpn.attackCd<=counter2)
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
             {
-                rWpn.hit();
-                counter2 = 0;
+                WM.Attack(0);//1
             }
+            WM.setDt(dt.asSeconds());
+            WM.UpdateWeapons();
 
             shader.setParameter("collMap",cTexture);
             shader.setParameter("resolution",sf::Vector2f(mapX,mapY));
@@ -202,9 +203,6 @@ auto main() -> int {
             slider.setParameter("fillColor",1.,0.,0.,1.);
             slider.setParameter("bgColor",1.,0.,0.,0.3);
 
-            if(counter<0.1){
-                wpn.hit();
-            }
             player.update();
             rM.DrawAll();
 
