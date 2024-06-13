@@ -1,7 +1,7 @@
 #include <iostream>
-#include <SFML/Graphics.hpp>
-#include <SFML/Window.hpp>
-#include <SFML/Window/Keyboard.hpp>
+//#include <SFML/Graphics.hpp>
+//#include <SFML/Window.hpp>
+//#include <SFML/System.hpp>
 #include <cmath>
 #include "Player.h"
 #include "vmath.h"
@@ -85,8 +85,10 @@ auto main() -> int {
     renderManager rM = renderManager(&window);
 
     Player player = Player(0, 0,mapColls,100,&rM, 466);
+    WeaponManager WM;
 
-    player.addTalisman(new MovementOnCrit(&player, 1.f, 1.3f, sf::Vector2f(100,100)));
+
+    player.addTalisman(new MovementOnCrit(&player, 1.f, 1.3f, sf::Vector2f(100,100), &WM));
 
 //    CConMeleeHit ccMH_talisman = CConMeleeHit(&player, 1.f, 100, sf::Vector2f (200, 100));
 //    player.addTalisman(&ccMH_talisman);
@@ -122,8 +124,9 @@ auto main() -> int {
     Staff wpn = Staff(20.f, 20,2.f,100.f, 0.5f, &player, &enemies, &rM);
 //    RangedWpn rWpn = RangedWpn(10.f, 50, 1.5, 0.f, sf::Vector2f(borderX/2, borderY/2),0.2f, player, enemies,&rM);
 
-    WeaponManager WM;
+
     WM.addWeapon(&wpn);
+
 
     std::vector<Collectible*> collectibles;
 
