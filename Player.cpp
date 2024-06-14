@@ -28,7 +28,7 @@ void Player::damage(float ammount) {
 }
 
 void Player::die() {
-    //std::cout<<"Rip\n";
+    dead = true;
 }
 
 void Player::shunt(int rayNum, float shuntDist){

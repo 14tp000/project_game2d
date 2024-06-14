@@ -47,6 +47,7 @@ public:
     sf::Image collMap;
     float radius = 50;
     float movementSpeed;
+    bool dead = false;
     renderManager* renderM;
 
     std::vector<Talisman*> talismans;
@@ -54,7 +55,6 @@ public:
     ////talisman flags
     bool onCrit = false;
     bool onMeleeHit = false;
-
 
 
     Player(float x, float y, sf::Image collMap, float mHP, renderManager* rM, float spd){

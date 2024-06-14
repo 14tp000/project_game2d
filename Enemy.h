@@ -38,7 +38,7 @@ class Enemy: public Destructible{
         virtual void damagePlayer(float ammount){std::cout<<"to nie powinno byc wywolywane";}
         sf::Vector2f getScreenPos();
         sf::Vector2f getGlobalPos();
-        Enemy(sf::Vector2f startPos, float rad, sf::Image* collMap, Player* pl, float hp, renderManager* rM, float spd, float kbForce){
+        Enemy(sf::Vector2f startPos, float rad, sf::Image* collMap, Player* pl, float hp, renderManager* rM, float spd, float kbForce, scoreManager* scoreManager){
             radius = rad;
             position = startPos;
             gfx = sf::CircleShape(rad, 32);
@@ -49,6 +49,7 @@ class Enemy: public Destructible{
             renderM = rM;
             speed = spd;
             knockbackForce = kbForce;
+            sM = scoreManager;
         }
 };
 

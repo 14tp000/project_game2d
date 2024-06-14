@@ -11,10 +11,10 @@
 
 void Staff::hit() {
     if(counter>=attackCd) {
+        attackGfx.setFillColor(sf::Color::White);
         for (int i = 0; i < enemies->size(); ++i) {
             sf::Vector2f enemyPos = (*enemies)[i]->getScreenPos();
             attackGfx.setPosition(center - sf::Vector2f(range, range));
-
             if (vmath::distV(enemyPos, center) <= range + (*enemies)[i]->radius) {
                 (*enemies)[i]->knockBack(center - enemyPos, .5);
                 player->onMeleeHit = true;

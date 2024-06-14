@@ -97,7 +97,6 @@ void attack2::attackPlayer() {
 
         for (int x = 0; x < numBulletsX; x++) {
             for(int y = 0;y<numBulletsY;y++) {
-
                 if(boss->projectileI>=boss->bullets.size()){
                     boss->bullets.push_back(std::make_unique<Projectile>(0, sf::Vector2f(0, 0), radius,
                                                                                 boss->position + sf::Vector2f(x*step-numBulletsX*step/2,y*step-numBulletsY*step/2)

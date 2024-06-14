@@ -48,5 +48,9 @@ add_executable(project_game2d main.cpp
         Collectible.h
         WeaponManager.cpp
         WeaponManager.h
+        Canvas.cpp
+        Canvas.h
+        scoreManager.cpp
+        scoreManager.h
 )
 target_link_libraries(project_game2d sfml-graphics)

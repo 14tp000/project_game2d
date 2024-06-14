@@ -6,9 +6,11 @@
 
 
 void Destructible::damage(float ammount) {
-    currentHP-=ammount;
-    if(currentHP<0){
-        currentHP = 0;
-        die();
+    if(!dead) {
+        currentHP -= ammount;
+        if (currentHP < 0) {
+            currentHP = 0;
+            die();
+        }
     }
 }

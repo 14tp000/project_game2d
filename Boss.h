@@ -23,12 +23,13 @@ public:
     std::vector<std::unique_ptr<Projectile>> bullets;
     int projectileI = 0;
     int maxNumProjectile = 100;
-    Boss(sf::Vector2f startPos, float rad, sf::Image* collMap, Player* pl, float hp, renderManager* rM, float speed, std::vector<sf::Vector2f>* points, float atkDist, attackMove* atk):
-    Enemy(startPos,rad,collMap,pl,hp,rM,speed,0){
+    Boss(sf::Vector2f startPos, float rad, sf::Image* collMap, Player* pl, float hp, renderManager* rM, float speed, std::vector<sf::Vector2f>* points, float atkDist, attackMove* atk, scoreManager* sM):
+    Enemy(startPos,rad,collMap,pl,hp,rM,speed,0, sM){
         gfx.setFillColor(sf::Color::Magenta);
         patrolPts = points;
         attackDist = atkDist;
         attack = atk;
+        score = 120;
     };
     void MoveToPlayer() override;
     void damagePlayer(float ammount) override;

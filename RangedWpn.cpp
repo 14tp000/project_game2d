@@ -10,7 +10,19 @@
 
 void RangedWpn::hit() {
     if(counter>=attackCd) {
-        bullets.push_back(new Projectile(700, fireDir, 20, center - player->getPosition(), player->getPosition()));
+        if(projectileI>=bullets.size()) {
+            bullets.push_back(std::make_unique<Projectile>(
+                    Projectile(700, fireDir, 20, center - player->getPosition(), player->getPosition())));
+
+        }
+        else{
+            bullets[projectileI] = std::make_unique<Projectile>(
+                    Projectile(700, fireDir, 20, center - player->getPosition(), player->getPosition()));
+        }
+        projectileI++;
+        if(projectileI>=maxNumProjectiles){
+            projectileI = 0;
+        }
         counter = 0;
     }
 }
@@ -29,7 +41,6 @@ void RangedWpn::Update(float dt) {
                     (*enemies)[j]->radius + bullets[i]->radius) {
                     (*enemies)[j]->knockBack(bullets[i]->direction, -50);
                     if(critChance>=critNumber){
-                        std::cout<<"crit";
                         (*enemies)[j]->damage(damage*critMultiplier);
                         if(!player->onCrit) {
                             player->onCrit = true;

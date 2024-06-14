@@ -14,7 +14,24 @@ void rangedEnemy::MoveToPlayer() {
 }
 void rangedEnemy::damagePlayer(float ammount) {
     if(counter>=attackDelay&&inPlayerLOS) {
-        bullets.push_back(new Projectile(800, -vmath::normaliseVector(getScreenPos()-player->getScreenPos()), 20, getGlobalPos(), player->getPosition()));
+
+        if(projectileI>=bullets.size()) {
+//            bullets.push_back(std::make_unique<Projectile>(
+//                    Projectile(800, -vmath::normaliseVector(getScreenPos()-player->getScreenPos()), 20, getGlobalPos(), player->getPosition())));
+
+            bullets.push_back(new Projectile(800, -vmath::normaliseVector(getScreenPos()-player->getScreenPos()), 20, getGlobalPos(), player->getPosition()));
+
+        }
+        else{
+            delete(bullets[projectileI]); //// I really don't know why game crashed when i tried to overwrite smart pointers... anyway, it works this way
+//            bullets[projectileI] = std::make_unique<Projectile>(
+//                    Projectile(1, sf::Vector2f(1,0), 20, getGlobalPos(), player->getPosition()));
+            bullets[projectileI] = new Projectile(800, -vmath::normaliseVector(getScreenPos()-player->getScreenPos()), 20, getGlobalPos(), player->getPosition());
+        }
+        projectileI++;
+        if(projectileI>=maxNumProjectiles){
+            projectileI = 0;
+        }
         counter = 0;
     }
 }

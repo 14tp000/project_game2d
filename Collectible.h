@@ -51,4 +51,12 @@ public:
         Collectible(plr, radius, pos, color){};
 };
 
+class BossSpawn: public Collectible{
+public:
+    bool bossSpawned = false;
+    void Trigger() override {std::cout<<"Boss Spawned";};
+    BossSpawn(Player* plr, float radius, sf::Vector2f  pos, sf::Color color):
+    Collectible(plr, radius, pos, color){};
+};
+
 #endif //PROJECT_GAME2D_COLLECTIBLE_H
