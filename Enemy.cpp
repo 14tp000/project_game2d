@@ -7,7 +7,7 @@
 #include <iostream>
 #include <cmath>
 
-
+//https://www.youtube.com/watch?v=wC9iu7cuQjI <- idea for simple pathfinding
 
 void Enemy::Update(){
     if(!dead) {
