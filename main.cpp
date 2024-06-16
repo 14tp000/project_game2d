@@ -66,9 +66,9 @@ Canvas* createDeathScreen(renderManager* rM, unsigned int borderX, unsigned int 
     auto text = new sf::Text();
 
     sf::Font* arial = new sf::Font(); // i love pointers :)
-    if (!arial->loadFromFile("..\\arial.ttf"))
+    if (!arial->loadFromFile("..\\assets\\fonts\\arial.ttf"))
     {
-        std::cout<<"Font is dead";
+        std::cerr<<"Font is dead";
     }
 
     text->setString("YOU DIED");
@@ -92,9 +92,9 @@ Canvas* createWinScreen(renderManager* rM, unsigned int borderX, unsigned int bo
     auto text = new sf::Text();
 
     sf::Font* arial = new sf::Font();
-    if (!arial->loadFromFile("..\\arial.ttf"))
+    if (!arial->loadFromFile("..\\assets\\fonts\\arial.ttf"))
     {
-        std::cout<<"Font is dead";
+        std::cerr<<"Font is dead";
     }
 
     text->setString("YOU WON");
@@ -113,9 +113,9 @@ sf::Text* createFinalScoreText(){
     auto text = new sf::Text();
 
     sf::Font* arial = new sf::Font();
-    if (!arial->loadFromFile("..\\arial.ttf"))
+    if (!arial->loadFromFile("..\\assets\\fonts\\arial.ttf"))
     {
-        std::cout<<"Font is dead";
+        std::cerr<<"Font is dead";
     }
 
     text->setString("0");
@@ -222,10 +222,11 @@ auto main() -> int {
     Canvas* deathScreen = createDeathScreen(&rM, borderX, borderY, finalScoreTxt);
     Canvas* winScreen = createWinScreen(&rM, borderX, borderY, finalScoreTxt);
 
+
     float counter = 0;
     float counter2 = 0;
     if (!shader.loadFromFile("..\\assets\\shaders\\collShader.frag", sf::Shader::Fragment)||!slider.loadFromFile("..\\assets\\shaders\\sliderShader.frag", sf::Shader::Fragment)) {
-        std::cout<<"AMOGUUUUUUUUUUUUUUUS";
+        std::cerr<<"AMOGUUUUUUUUUUUUUUUS";
     }
     else {
         sf::Clock deltaClock;

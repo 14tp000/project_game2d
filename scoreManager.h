@@ -16,9 +16,9 @@ public:
     scoreManager(sf::Vector2f pos, float scale, renderManager* renderManager){
         sf::Font* arial = new sf::Font();
 
-        if (!arial->loadFromFile("..\\arial.ttf"))
+        if (!arial->loadFromFile("..\\assets\\fonts\\arial.ttf"))
         {
-            std::cout<<"Font is dead";
+            std::cerr<<"Font is dead";
         }
 
         gfx.setString(std::to_string(score));
