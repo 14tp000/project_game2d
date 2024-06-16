@@ -142,13 +142,13 @@ auto main() -> int {
     );
 
     sf::Image map;
-    map.loadFromFile("..\\maps\\mapImages\\map1.png");
+    map.loadFromFile("..\\assets\\maps\\map1\\map1.png");
     sf::Texture mTexture;
     mTexture.loadFromImage(map);
 
 
     sf::Image mapColls;
-    mapColls.loadFromFile("..\\maps\\mapImages\\map1_collisions.png");
+    mapColls.loadFromFile("..\\assets\\maps\\map1\\map1_collisions.png");
     sf::Texture cTexture;
     cTexture.loadFromImage(mapColls);
 
@@ -224,7 +224,7 @@ auto main() -> int {
 
     float counter = 0;
     float counter2 = 0;
-    if (!shader.loadFromFile("./collShader.frag", sf::Shader::Fragment)||!slider.loadFromFile("./sliderShader.frag", sf::Shader::Fragment)) {
+    if (!shader.loadFromFile("..\\assets\\shaders\\collShader.frag", sf::Shader::Fragment)||!slider.loadFromFile("..\\assets\\shaders\\sliderShader.frag", sf::Shader::Fragment)) {
         std::cout<<"AMOGUUUUUUUUUUUUUUUS";
     }
     else {
